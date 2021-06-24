@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
-  <title>manual.md - Grip</title>
+  <title>README.md - Grip</title>
   <link rel="icon" href="http://localhost:6419/__/grip/static/favicon.ico">
   <link rel="stylesheet" href="manual_files/github-ed989774d1e86635d4e55c923bae6ee4.css">
   <link rel="stylesheet" href="manual_files/behaviors-bef710739e908fc61f7758f2124d97cc.css">
@@ -135,10 +135,10 @@ column types in the copied dataframe:</p>
 <li>Loop through each available customer column name from the <a href="#customer-database">settings</a>
  and match to all primary database columns for that matching condition. 
 If a column is not found in the customer database, skip it. Extract 
-their TIDs</li>
+their IDs</li>
 <li>Loop back to 3 for each other specified <a href="#match-options">match conditions</a>.</li>
-<li>Drop any TIDs that are perfect matches from the uncertain matches.</li>
-<li>Drop any TIDs in the other conditions from the missing data matches.</li>
+<li>Drop any IDs that are perfect matches from the uncertain matches.</li>
+<li>Drop any IDs in the other conditions from the missing data matches.</li>
 <li>Match uncertain or missing data matches by medical area. Check the 
 column names in the primary database, and their translations stored in 
 the <a href="#areas">areas.txt</a> file. These checks occur similarly to the method in the previous steps.</li>
@@ -151,24 +151,24 @@ only the processed information) for each of the 3 cases. It saves this
 file in the defined <a href="#check">check</a> folder with the same 
 filename as the original customer database with suffix '_check'. This 
 file is automatically opened for the user.</p>
-<p>The user must then decide which TIDs to remove and save the file. The
- program will then re-import this Excel file, reading the remaining 
-TIDs, adding those to the final match list.</p>
+<p>The user must then decide which IDs to remove and save the file. The 
+program will then re-import this Excel file, reading the remaining IDs, 
+adding those to the final match list.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The user must save the file after deleting rows, or the program may keep <em>ALL</em> conflicts.</p>
 </blockquote>
 <h3>
 <a id="user-content-resolve-conflicts-program" class="anchor" href="#resolve-conflicts-program" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resolve Conflicts: Program</h3>
 <p>Otherwise, if the user has instead opted to resolve conflicts within the program in <a href="#runtime-options">settings</a>,
- they are shown the conflicting TIDs. They are then given the option to 
+ they are shown the conflicting IDs. They are then given the option to 
 view more information on these conflicts in the program window by 
-inputting in TIDs. The following options are possible:</p>
+inputting in IDs. The following options are possible:</p>
 <ul>
 <li>Enter numbers separated by a space e.g. '2 8 9 1000 92857'</li>
 <li>Enter 'all' to view information on all conflicts</li>
-<li>Enter 'n' to stop viewing and specify the TIDs they would like to keep</li>
+<li>Enter 'n' to stop viewing and specify the IDs they would like to keep</li>
 </ul>
-<p>After entering 'n', the user must then enter the TIDs they would like to keep with the following options possible:</p>
+<p>After entering 'n', the user must then enter the IDs they would like to keep with the following options possible:</p>
 <ul>
 <li>Enter numbers separated by a space e.g. '2 8 9 1000 92857'</li>
 <li>Enter 'all' to keep all conflicts</li>
@@ -179,7 +179,7 @@ inputting in TIDs. The following options are possible:</p>
 <a id="user-content-export-reduced-sheets" class="anchor" href="#export-reduced-sheets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Export Reduced Sheets</h3>
 <p>The first export saves the matched raw information from the given databases to the <a href="#final">final</a> folder. The information exported can be defined settings.</p>
 <ul>
-<li>Program extracts the TIDs and customer indices from the match data and gets only those entries from the original database</li>
+<li>Program extracts the IDs and customer indices from the match data and gets only those entries from the original database</li>
 <li>If the user has opted to <a href="#export-options">export customer data</a>, get all customer data. Otherwise, just get the data from the columns used for matching from customer database.</li>
 <li>Add customer data to a separate sheet if the user has <a href="#export-options">opted to</a>.
  Otherwise, append to the primary data with a spaced column between the 
@@ -320,7 +320,7 @@ your own comments in this way.</p>
 <li>
 <strong>s</strong>: fast mode - skip all settings checks and just use the settings in this file</li>
 <li>
-<strong>v</strong>: view mode - view conflicting entries in program and resolve by manual TID input instead of by external Excel sheet.
+<strong>v</strong>: view mode - view conflicting entries in program and resolve by manual ID input instead of by external Excel sheet.
 <blockquote>
 <p><strong>NOTE</strong>: This setting is only considered if fast mode is enabled</p>
 </blockquote>
@@ -373,7 +373,7 @@ is an incrementing number.</p>
 </blockquote>
 <ul>
 <li>
-<strong>TID Col</strong>		: TID</li>
+<strong>ID Col</strong>		: TID</li>
 <li>
 <strong>Interest</strong>		: Interesse MAFO</li>
 <li>
@@ -442,7 +442,7 @@ pseudo sorting function.
 <ul>
 <li>Extra columns from the primary database to include in the mailing list export
 <blockquote>
-<p><strong>NOTE</strong>: TID, names, and email columns included by default, do not add these here.</p>
+<p><strong>NOTE</strong>: ID, names, and email columns included by default, do not add these here.</p>
 </blockquote>
 </li>
 </ul>

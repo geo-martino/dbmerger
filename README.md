@@ -62,26 +62,26 @@ Match by the following logic:
 1. Match where names columns are identical.
 2. Check options file for loop columns. If only match by names enabled, stop.
 3. Get [column names](#column-names) for first matching condition, i.e., phone numbers.
-4. Loop through each available customer column name from the [settings](#customer-database) and match to all primary database columns for that matching condition. If a column is not found in the customer database, skip it. Extract their TIDs
+4. Loop through each available customer column name from the [settings](#customer-database) and match to all primary database columns for that matching condition. If a column is not found in the customer database, skip it. Extract their IDs
 5. Loop back to 3 for each other specified [match conditions](#match-options).
-6. Drop any TIDs that are perfect matches from the uncertain matches.
-7. Drop any TIDs in the other conditions from the missing data matches.
+6. Drop any IDs that are perfect matches from the uncertain matches.
+7. Drop any IDs in the other conditions from the missing data matches.
 8. Match uncertain or missing data matches by medical area. Check the column names in the primary database, and their translations stored in the [areas.txt](#areas) file. These checks occur similarly to the method in the previous steps.
 
 ### Resolve Conflicts: Excel
 If the user has opted to resolve by Excel in [settings](#runtime-options), the program exports the matches from the copied dataframe (containing only the processed information) for each of the 3 cases. It saves this file in the defined [check](#check) folder with the same filename as the original customer database with suffix '_check'. This file is automatically opened for the user.
 
-The user must then decide which TIDs to remove and save the file. The program will then re-import this Excel file, reading the remaining TIDs, adding those to the final match list.
+The user must then decide which IDs to remove and save the file. The program will then re-import this Excel file, reading the remaining IDs, adding those to the final match list.
 > **NOTE**: The user must save the file after deleting rows, or the program may keep *ALL* conflicts.
 
 ### Resolve Conflicts: Program
-Otherwise, if the user has instead opted to resolve conflicts within the program in [settings](#runtime-options), they are shown the conflicting TIDs. They are then given the option to view more information on these conflicts in the program window by inputting in TIDs. The following options are possible:
+Otherwise, if the user has instead opted to resolve conflicts within the program in [settings](#runtime-options), they are shown the conflicting IDs. They are then given the option to view more information on these conflicts in the program window by inputting in IDs. The following options are possible:
 
 - Enter numbers separated by a space e.g. '2 8 9 1000 92857'
 - Enter 'all' to view information on all conflicts
-- Enter 'n' to stop viewing and specify the TIDs they would like to keep
+- Enter 'n' to stop viewing and specify the IDs they would like to keep
 
-After entering 'n', the user must then enter the TIDs they would like to keep with the following options possible:
+After entering 'n', the user must then enter the IDs they would like to keep with the following options possible:
 
 - Enter numbers separated by a space e.g. '2 8 9 1000 92857'
 - Enter 'all' to keep all conflicts
@@ -92,7 +92,7 @@ The program then shows the number of conflicts it is keeping and continues.
 ### Export Reduced Sheets
 The first export saves the matched raw information from the given databases to the [final](#final) folder. The information exported can be defined settings.
 
-- Program extracts the TIDs and customer indices from the match data and gets only those entries from the original database
+- Program extracts the IDs and customer indices from the match data and gets only those entries from the original database
 - If the user has opted to [export customer data](#export-options), get all customer data. Otherwise, just get the data from the columns used for matching from customer database. 
 - Add customer data to a separate sheet if the user has [opted to](#export-options). Otherwise, append to the primary data with a spaced column between the two containing 'CUSTOMER DATA >>>' to separate the data.
 - Save to the specified [final](#final) folder with the same filename as the original customer database with suffix '_final'
@@ -176,7 +176,7 @@ To change program options, please input one or many of the following characters:
 
 ### Runtime Options
 - **s**: fast mode - skip all settings checks and just use the settings in this file
-- **v**: view mode - view conflicting entries in program and resolve by manual TID input instead of by external Excel sheet.
+- **v**: view mode - view conflicting entries in program and resolve by manual ID input instead of by external Excel sheet.
 	> **NOTE**: This setting is only considered if fast mode is enabled
 - **q**: auto mode - skip all user input and automatically run the program *(enables fast mode by default)*
 	> **NOTE**: If user has any files open that the program needs to write to, the program now saves them with '_#' suffix where # is an incrementing number.
@@ -204,7 +204,7 @@ The column names for the primary database must be exact and in order.
 >- **Pri Email**	: E-Mail (beruflich), E-Mail
 >- **Pri Fax**		: Faxnummer (beruflich), Faxnummer (privat)
 > >
->- **TID Col**		: TID
+>- **ID Col**		: TID
 >- **Interest**		: Interesse MAFO
 >- **Greeting**		: Briefanrede
 >- **Title**		: Titel
@@ -239,7 +239,7 @@ Mailing lists are built from the email column names given above.
 
 #### Email Add
 - Extra columns from the primary database to include in the mailing list export
-	> **NOTE**: TID, names, and email columns included by default, do not add these here.
+	> **NOTE**: ID, names, and email columns included by default, do not add these here.
 
 
 #### Phone Sort
