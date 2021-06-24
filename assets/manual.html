@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>manual.md - Grip</title>
+  <link rel="icon" href="http://localhost:6419/__/grip/static/favicon.ico">
+  <link rel="stylesheet" href="manual_files/github-ed989774d1e86635d4e55c923bae6ee4.css">
+  <link rel="stylesheet" href="manual_files/behaviors-bef710739e908fc61f7758f2124d97cc.css">
+  <link rel="stylesheet" href="manual_files/frameworks-ca24b36724188e34a6ef7bd68e5b76dc.css">
+  <link rel="stylesheet" href="manual_files/octicons.css">
+  <style>
+    /* Page tweaks */
+    .preview-page {
+      margin-top: 64px;
+    }
+    /* User-content tweaks */
+    .timeline-comment-wrapper > .timeline-comment:after,
+    .timeline-comment-wrapper > .timeline-comment:before {
+      content: none;
+    }
+    /* User-content overrides */
+    .discussion-timeline.wide {
+      width: 920px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div id="preview-page" class="preview-page" data-autorefresh-url="/__/grip/refresh/">
+
+    
+
+      <div role="main" class="main-content">
+        <div class="container new-discussion-timeline experiment-repo-nav">
+          <div class="repository-content">
+            <div id="readme" class="readme boxed-group clearfix announce instapaper_body md">
+              
+                
+              
+              <article class="markdown-body entry-content" itemprop="text" id="grip-content">
+                <h1>
+<a id="user-content-database-merge--compare" class="anchor" href="#database-merge--compare" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>Database Merge &amp; Compare</strong>
+</h1>
+<p>This program compares many customer databases against a primary 
+database, finding, sorting, and extracting the most valuable data on 
+these matching customers.</p>
+<p>This document details the general logic of the program and its programmable settings.</p>
+<p><em><strong>This program has been made through private agreement, 
+with permission to share for the author's portfolio purposes only. Use 
+of this software for commercial or private purposes is expressly 
+forbidden.</strong></em></p>
+<h2>
+<a id="user-content-sections" class="anchor" href="#sections" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sections</h2>
+<ul>
+<li><a href="#program-logic">Program Logic</a></li>
+<li><a href="#settings">Settings</a></li>
+<li><a href="#author-information-licence-and-acknowledgements">Author Information, Licence, and Acknowledgements</a></li>
+</ul>
+<hr>
+<h2>
+<a id="user-content-program-logic" class="anchor" href="#program-logic" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Program Logic</h2>
+<p>To ensure smooth use of the program, the following section is 
+provided as reference should you encounter errors or unexpected 
+behaviour.</p>
+<ul>
+<li><a href="#load-settings">Load Settings</a></li>
+<li><a href="#check-directories-and-files">Check Directories and Files</a></li>
+<li><a href="#load-databases">Load Databases</a></li>
+<li><a href="#matching">Matching</a></li>
+<li><a href="#resolve-conflicts-excel">Resolve Conflicts: Excel</a></li>
+<li><a href="#resolve-conflicts-program">Resolve Conflicts: Program</a></li>
+<li><a href="#export-reduced-sheets">Export Reduced Sheets</a></li>
+<li><a href="#export-mailing-list">Export Mailing List</a></li>
+<li><a href="#loopback-and-finalise">Loopback and Finalise</a></li>
+<li><a href="#logging">Logging</a></li>
+</ul>
+<h3>
+<a id="user-content-load-settings" class="anchor" href="#load-settings" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Load Settings</h3>
+<p>The program begins by automatically loading from the settings.txt 
+file in the program folder. If it is not found, it will restore default 
+from the backup settings.bak file. If there are any errors in the 
+settings.txt file, i.e., settings keys changed or setting values input 
+incorrectly, it will inform the user of corruption and prompt to restore
+ from defaults. Once loaded, the key settings are displayed to the user.</p>
+<p>If <a href="#runtime-options">fast mode</a> has been enabled, the program will continue on to load files. Otherwise, it will display the <a href="#program-options">settings</a> and prompt the user to change these, thereafter doing the same for <a href="#column-names">column names</a>.</p>
+<h3>
+<a id="user-content-check-directories-and-files" class="anchor" href="#check-directories-and-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check Directories and Files</h3>
+<p>If the <a href="#directories">directories</a> specified in the settings.txt are not found, the program will create them, ask the user to add files to the <a href="#input">input</a> directory and restart the program.</p>
+<p>The program will then check for the presence of the primary database according to the <a href="#primary-data">name given in the settings.txt file</a>. If it is not found, the program prompts the user to type its filename.</p>
+<blockquote>
+<p><strong>NOTE</strong>: Files moved into the folder once the program 
+has started are not loaded. To load these files, you will need to 
+restart the program.</p>
+</blockquote>
+<p>It then converts any Excel files to csv for fasting loading into the program, moving all remaining Excel files in the <a href="#input">input</a> folder to the redundant folder.</p>
+<blockquote>
+<p><strong>NOTE</strong>: It is advised to let the program convert Excel
+ files to csv itself. If using your own csv files, please ensure they 
+are ';' delimited.</p>
+</blockquote>
+<div style="page-break-after: always;"></div><h3>
+<a id="user-content-load-databases" class="anchor" href="#load-databases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Load Databases</h3>
+<p>The program first checks for header rows, identifying number of rows to skip to find the column name row.</p>
+<blockquote>
+<p><strong>NOTE</strong>: The program is able to detect header rows if 
+the header rows take up no more than 20 rows. Please ensure the column 
+names rows starts within the first 20 rows of the file before conversion
+ in the previous step.</p>
+</blockquote>
+<p>Data is the loaded. If the user has decided to <a href="#match-options">drop customers</a>
+ who do not wish to be contacted from the data, these customers are 
+removed from the database here. Copying the dataframe and storing the 
+original for later reference for the export, it cleans the following 
+column types in the copied dataframe:</p>
+<ul>
+<li>
+<strong>Name Columns</strong>: Make all lower case, remove spaces, and any non-alphabetical characters.</li>
+<li>
+<strong>Phone Columns</strong>: Remove non-digit characters and drop prefixes defined by <a href="#phone-drop">Phone Drop</a> setting.</li>
+<li>
+<strong>Email Columns</strong>: Make all lower case and remove spaces.</li>
+<li>
+<strong>Phone Columns</strong>: Remove non-digit characters.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong>: The program only processes the columns it can find in the dataframe as defined by the <a href="#column-names">column names</a> settings.</p>
+</blockquote>
+<h3>
+<a id="user-content-matching" class="anchor" href="#matching" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Matching</h3>
+<p>Match by the following logic:</p>
+<ol>
+<li>Match where names columns are identical.</li>
+<li>Check options file for loop columns. If only match by names enabled, stop.</li>
+<li>Get <a href="#column-names">column names</a> for first matching condition, i.e., phone numbers.</li>
+<li>Loop through each available customer column name from the <a href="#customer-database">settings</a>
+ and match to all primary database columns for that matching condition. 
+If a column is not found in the customer database, skip it. Extract 
+their TIDs</li>
+<li>Loop back to 3 for each other specified <a href="#match-options">match conditions</a>.</li>
+<li>Drop any TIDs that are perfect matches from the uncertain matches.</li>
+<li>Drop any TIDs in the other conditions from the missing data matches.</li>
+<li>Match uncertain or missing data matches by medical area. Check the 
+column names in the primary database, and their translations stored in 
+the <a href="#areas">areas.txt</a> file. These checks occur similarly to the method in the previous steps.</li>
+</ol>
+<h3>
+<a id="user-content-resolve-conflicts-excel" class="anchor" href="#resolve-conflicts-excel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resolve Conflicts: Excel</h3>
+<p>If the user has opted to resolve by Excel in <a href="#runtime-options">settings</a>,
+ the program exports the matches from the copied dataframe (containing 
+only the processed information) for each of the 3 cases. It saves this 
+file in the defined <a href="#check">check</a> folder with the same 
+filename as the original customer database with suffix '_check'. This 
+file is automatically opened for the user.</p>
+<p>The user must then decide which TIDs to remove and save the file. The
+ program will then re-import this Excel file, reading the remaining 
+TIDs, adding those to the final match list.</p>
+<blockquote>
+<p><strong>NOTE</strong>: The user must save the file after deleting rows, or the program may keep <em>ALL</em> conflicts.</p>
+</blockquote>
+<h3>
+<a id="user-content-resolve-conflicts-program" class="anchor" href="#resolve-conflicts-program" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resolve Conflicts: Program</h3>
+<p>Otherwise, if the user has instead opted to resolve conflicts within the program in <a href="#runtime-options">settings</a>,
+ they are shown the conflicting TIDs. They are then given the option to 
+view more information on these conflicts in the program window by 
+inputting in TIDs. The following options are possible:</p>
+<ul>
+<li>Enter numbers separated by a space e.g. '2 8 9 1000 92857'</li>
+<li>Enter 'all' to view information on all conflicts</li>
+<li>Enter 'n' to stop viewing and specify the TIDs they would like to keep</li>
+</ul>
+<p>After entering 'n', the user must then enter the TIDs they would like to keep with the following options possible:</p>
+<ul>
+<li>Enter numbers separated by a space e.g. '2 8 9 1000 92857'</li>
+<li>Enter 'all' to keep all conflicts</li>
+<li>Enter 'none' to drop all conflicts</li>
+</ul>
+<p>The program then shows the number of conflicts it is keeping and continues.</p>
+<div style="page-break-after: always;"></div><h3>
+<a id="user-content-export-reduced-sheets" class="anchor" href="#export-reduced-sheets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Export Reduced Sheets</h3>
+<p>The first export saves the matched raw information from the given databases to the <a href="#final">final</a> folder. The information exported can be defined settings.</p>
+<ul>
+<li>Program extracts the TIDs and customer indices from the match data and gets only those entries from the original database</li>
+<li>If the user has opted to <a href="#export-options">export customer data</a>, get all customer data. Otherwise, just get the data from the columns used for matching from customer database.</li>
+<li>Add customer data to a separate sheet if the user has <a href="#export-options">opted to</a>.
+ Otherwise, append to the primary data with a spaced column between the 
+two containing 'CUSTOMER DATA &gt;&gt;&gt;' to separate the data.</li>
+<li>Save to the specified <a href="#final">final</a> folder with the same filename as the original customer database with suffix '_final'</li>
+</ul>
+<h3>
+<a id="user-content-export-mailing-list" class="anchor" href="#export-mailing-list" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Export Mailing List</h3>
+<p>If specified in the <a href="#export-options">settings</a>, the 
+program will further process the data into a mailing list sheet appended
+ to the final file. This list is processed as such:</p>
+<ul>
+<li>Get all contact information found from both databases as defined in the column settings</li>
+<li>Merge duplicate entries, keeping only unique contact data on each person from each database.</li>
+<li>Sort emails according to the <a href="#email-sort">Email Sort</a> setting.
+<ul>
+<li>Email prefixes given in this list are de-prioritised, i.e., emails not beginning with the prefixes in this list are put first.</li>
+</ul>
+<blockquote>
+<ul>
+<li>
+<strong>NOTE</strong>: These de-prioritised emails are sorted in the 
+same order as given in the settings and can therefore be used to sort 
+emails by lowest priority.</li>
+</ul>
+</blockquote>
+</li>
+<li>Sort phone numbers according to the <a href="#phone-sort">Phone Sort</a> and <a href="#phone-drop">Phone Drop</a> settings.
+<ul>
+<li>Check for identical phone numbers by dropping prefixes found in the <a href="#phone-drop">Phone Drop</a> setting, comparing for each entry. Keep numbers containing prefixes.</li>
+<li>Sort numbers according to the prefixes in the <a href="#phone-sort">Phone Sort</a> setting. Numbers in this list are prioritised, i.e., numbers beginning with the prefixes in this list are put first.</li>
+</ul>
+<blockquote>
+<ul>
+<li>
+<strong>NOTE</strong>: Numbers sorted in the same order as given in the 
+settings e.g., if [01, 02] given, all numbers beginning with 01 appear 
+first, 02 in the middle, with the rest at the end.</li>
+</ul>
+</blockquote>
+</li>
+<li>If the given <a href="#primary-database">greeting</a> is also in the <a href="#email-add">Email Add</a> setting, fix typo in greeting:
+<ul>
+<li>'geeherte' -&gt; 'geehrte' <em>AND</em> 'geeherter' -&gt; 'geehrter'</li>
+</ul>
+</li>
+<li>If the given <a href="#primary-database">title column</a> is also in the <a href="#email-add">Email Add</a> setting:
+<ul>
+<li>Get titles from both databases</li>
+<li>Drop titles in <a href="#title-drop">Title Drop</a> setting (case-insensitive)</li>
+<li>Return list of unique titles in <a href="#primary-database">Title</a> column</li>
+</ul>
+<blockquote>
+<ul>
+<li>
+<strong>NOTE</strong>: The order of these titles will be in the same 
+order as given i.e., titles in primary database followed by titles in 
+customer database.</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<p>Entries are then split into two sheets based on whether the entries 
+contain email addresses or not. The program then appends these lists to 
+the final export. If enabled in the <a href="#export-options">settings</a>, the program will then repeat the above process for uncertain matches still contained in the intermediary Excel sheet.</p>
+<h3>
+<a id="user-content-loopback-and-finalise" class="anchor" href="#loopback-and-finalise" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Loopback and Finalise</h3>
+<p>The program loops back to the matching stage for every other customer database found in the file. Once complete it opens the <a href="#final">final</a> folder waits for the user to close the window.</p>
+<h3>
+<a id="user-content-logging" class="anchor" href="#logging" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Logging</h3>
+<p>Program exports log files to 'log' folder found in the program 
+directory. These contain further information about each run and can be 
+used for debugging or error correction purposes. If more than 30 logs 
+are in the folder, logs older than 2 months are deleted.</p>
+<div style="page-break-after: always;"></div><h2>
+<a id="user-content-settings" class="anchor" href="#settings" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Settings</h2>
+<p>The settings.txt file found in the program directory controls the 
+default settings, column names, and directories of the program.
+You may edit this file to change the default behaviour of the program</p>
+<blockquote>
+<p><strong>WARNING</strong>: enter settings on one line, do not press return at the end of a line!</p>
+</blockquote>
+<blockquote>
+<p><strong>WARNING</strong>: Do not change the text before : on any line that doesn't begin with #</p>
+</blockquote>
+<p>Lines beginning with # are ignored by the program, feel free to add any of
+your own comments in this way.</p>
+<blockquote>
+<p><strong>WARNING</strong>: Adding lines without # will cause the program to halt.</p>
+</blockquote>
+<h2>
+<a id="user-content-program-options" class="anchor" href="#program-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Program Options</h2>
+<p>To change program options, please input one or many of the following characters:</p>
+<blockquote>
+<p><strong>NOTE</strong>: match conditions may be combined i.e., typing 'ef' matches by name, confirming with email or fax</p>
+</blockquote>
+<p><em><strong>Enter all program options as a single word (case-insensitive)</strong></em>
+<em>e.g., 'pec' or 'ml' (without quotation marks)</em></p>
+<h3>
+<a id="user-content-match-options" class="anchor" href="#match-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Match Options</h3>
+<ul>
+<li>
+<strong>n</strong>: match by name only (enabled by default in the program)</li>
+<li>
+<strong>p</strong>: match by phone number</li>
+<li>
+<strong>e</strong>: match by email</li>
+<li>
+<strong>f</strong>: match by fax</li>
+<li>
+<strong>d</strong>: attempt to drop duplicate entries from customer database based on phone, email, and fax number columns</li>
+<li>
+<strong>z</strong>: if 'd' enabled, also attempt to drop duplicates from primary database</li>
+<li>
+<strong>i</strong>: drop customer's who do not want to be contacted <em>(i.e., where Interesse MAFO = 2)</em>
+</li>
+</ul>
+<h3>
+<a id="user-content-export-options" class="anchor" href="#export-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Export Options</h3>
+<ul>
+<li>
+<strong>x</strong>: export intermediary match cases to Excel spreadsheets</li>
+<li>
+<strong>l</strong>: append mailing list sheet</li>
+<li>
+<strong>c</strong>: append all customer's data in final export to primary sheet</li>
+<li>
+<strong>m</strong>: append matching customer's data to the primary data sheet in final export to primary sheet</li>
+<li>
+<strong>a</strong>: add customer data as an extra sheet rather than to the primary sheet <em>(data included can be modified with c or m as described above)</em>
+</li>
+<li>
+<strong>u</strong>: add extra mailing sheet for uncertain matches</li>
+</ul>
+<h3>
+<a id="user-content-runtime-options" class="anchor" href="#runtime-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Runtime Options</h3>
+<ul>
+<li>
+<strong>s</strong>: fast mode - skip all settings checks and just use the settings in this file</li>
+<li>
+<strong>v</strong>: view mode - view conflicting entries in program and resolve by manual TID input instead of by external Excel sheet.
+<blockquote>
+<p><strong>NOTE</strong>: This setting is only considered if fast mode is enabled</p>
+</blockquote>
+</li>
+<li>
+<strong>q</strong>: auto mode - skip all user input and automatically run the program <em>(enables fast mode by default)</em>
+<blockquote>
+<p><strong>NOTE</strong>: If user has any files open that the program 
+needs to write to, the program now saves them with '_#' suffix where # 
+is an incrementing number.</p>
+</blockquote>
+</li>
+<li>
+<strong>o</strong>: omit mode - when auto mode is enabled, only keep perfect matches
+<blockquote>
+<p><strong>NOTE</strong>: This setting is only considered if auto mode is enabled</p>
+</blockquote>
+</li>
+</ul>
+<h4>
+<a id="user-content-defaults" class="anchor" href="#defaults" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Defaults</h4>
+<blockquote>
+<ul>
+<li>
+<strong>Options</strong>:  npedi xlcau sqo</li>
+</ul>
+</blockquote>
+<div style="page-break-after: always;"></div><h2>
+<a id="user-content-column-names" class="anchor" href="#column-names" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Column Names</h2>
+<p>These settings control the column names the program will use to search for matches based on the above settings.</p>
+<p><em><strong>Enter column names as a comma-separated list (case-sensitive)</strong></em> <br>
+<em>e.g., 'Telefon-Festnetz, Telefon-Mobil (beruflich), Telefon-Mobil (privat)' (without quotation marks)</em></p>
+<h3>
+<a id="user-content-primary-database" class="anchor" href="#primary-database" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Primary Database</h3>
+<p>The column names for the primary database must be exact and in order.</p>
+<h4>
+<a id="user-content-defaults-1" class="anchor" href="#defaults-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Defaults</h4>
+<blockquote>
+<ul>
+<li>
+<strong>Pri Names</strong>	: Vorname, Nachname</li>
+<li>
+<strong>Pri Phone</strong>	: Telefon-Festnetz (beruflich), Telefon-Festnetz (privat), Telefon-Mobil (beruflich), Telefon-Mobil (privat)</li>
+<li>
+<strong>Pri Email</strong>	: E-Mail (beruflich), E-Mail</li>
+<li>
+<strong>Pri Fax</strong>		: Faxnummer (beruflich), Faxnummer (privat)</li>
+</ul>
+<blockquote>
+</blockquote>
+<ul>
+<li>
+<strong>TID Col</strong>		: TID</li>
+<li>
+<strong>Interest</strong>		: Interesse MAFO</li>
+<li>
+<strong>Greeting</strong>		: Briefanrede</li>
+<li>
+<strong>Title</strong>		: Titel</li>
+</ul>
+</blockquote>
+<h3>
+<a id="user-content-customer-database" class="anchor" href="#customer-database" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Customer Database</h3>
+<p>Unlike the primary database, the customer column names may be a list 
+of options of all the possible names given to that data type. For 
+example, if one customer database contains only the column name 'eMail' 
+for emails, but another contains both 'Email' and 'EMail', you may add 
+all three names, and the program will match all the columns it is able 
+to find.</p>
+<blockquote>
+<p><strong>WARNING</strong>: While you may define many column names for 
+the customer names setting, please ensure these are in first name to 
+last name order.</p>
+<ul>
+<li>i.e., you may write 'First_Name, Vorname, Firstname, Last_Name, 
+Nachname' but not 'First_Name, Last_Name, Vorname, Nachname, Firstname'</li>
+</ul>
+</blockquote>
+<h4>
+<a id="user-content-defaults-2" class="anchor" href="#defaults-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Defaults</h4>
+<blockquote>
+<ul>
+<li>
+<strong>Cus Names</strong>	: Vorname, First_Name, FirstName, Nachname, Last_Name, LastName, Person Name</li>
+<li>
+<strong>Cus Phone</strong>	: Phone, Telefon, Phone Nummer</li>
+<li>
+<strong>Cus Email</strong>	: eMail, Email, EMail, E-Mail</li>
+<li>
+<strong>Cus Fax</strong>		: Fax</li>
+<li>
+<strong>Cus Title</strong>	: Titel, Anrede und Titel</li>
+<li>
+<strong>Cus Areas</strong>	: Person Fachgebiet 1, Person Fachgebiet 2</li>
+</ul>
+</blockquote>
+<div style="page-break-after: always;"></div><h2>
+<a id="user-content-mailing-list-options" class="anchor" href="#mailing-list-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mailing List Options</h2>
+<p>Mailing lists are built from the email column names given above.</p>
+<blockquote>
+<p><strong>NOTE</strong>: To use the mailing list function, ensure that primary and customer databases have unique column names for emails!</p>
+</blockquote>
+<p><em><strong>Enter these options as a comma-separated list (case-sensitive)</strong></em> <br>
+<em>e.g., 'sekretariat@, info@, mail@, praxis@, kontakt@' (without quotation marks)</em></p>
+<h4>
+<a id="user-content-email-sort" class="anchor" href="#email-sort" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Email Sort</h4>
+<ul>
+<li>Emails containing these prefixes will be de-prioritised in the 
+mailing list sheet. Program sorts emails based on order of this list, 
+prioritising emails not in the list. Hence, this can also be used as a 
+pseudo sorting function.
+<blockquote>
+<p><strong>NOTE</strong>: list items must be email prefixes and must end with @ i.e., 'info@'.</p>
+</blockquote>
+</li>
+</ul>
+<h4>
+<a id="user-content-email-add" class="anchor" href="#email-add" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Email Add</h4>
+<ul>
+<li>Extra columns from the primary database to include in the mailing list export
+<blockquote>
+<p><strong>NOTE</strong>: TID, names, and email columns included by default, do not add these here.</p>
+</blockquote>
+</li>
+</ul>
+<h4>
+<a id="user-content-phone-sort" class="anchor" href="#phone-sort" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Phone Sort</h4>
+<ul>
+<li>Numbers containing these prefixes will be prioritised in the mailing
+ list sheet.Program sorts numbers based on order of this list, 
+de-prioritising numbers not in the list.
+<blockquote>
+<p><strong>NOTE</strong>: list items must be phone prefixes beginning with 0.</p>
+</blockquote>
+</li>
+</ul>
+<h4>
+<a id="user-content-phone-drop" class="anchor" href="#phone-drop" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Phone Drop</h4>
+<ul>
+<li>Phone prefixes/area codes the program will drop before attempting to match by phone number.
+<blockquote>
+<p><strong>NOTE</strong>: must start with 0, or the program may incorrectly match data.</p>
+</blockquote>
+</li>
+</ul>
+<h4>
+<a id="user-content-title-drop" class="anchor" href="#title-drop" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Title Drop</h4>
+<ul>
+<li>Titles to drop from the mailing list title column (case-insensitive)</li>
+</ul>
+<h4>
+<a id="user-content-defaults-3" class="anchor" href="#defaults-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Defaults</h4>
+<blockquote>
+<ul>
+<li>
+<strong>Mail Sort</strong>	: sekretariat@, info@, mail@, praxis@, kontakt@</li>
+<li>
+<strong>Mail Add</strong>		: Briefanrede, Anrede, Titel</li>
+<li>
+<strong>Phone Sort</strong>	: 01</li>
+<li>
+<strong>Phone Drop</strong>	: 030, 033</li>
+<li>
+<strong>Title Drop</strong>	: med, Herrn, Frau, Herr, meed</li>
+</ul>
+</blockquote>
+<div style="page-break-after: always;"></div><h2>
+<a id="user-content-directories" class="anchor" href="#directories" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Directories</h2>
+<p>These settings control the default folders &amp; files from which the program loads and saves files</p>
+<p><em><strong>Enter the exact name of folders/files  (case-sensitive)</strong></em></p>
+<h4>
+<a id="user-content-folder-name" class="anchor" href="#folder-name" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Folder Name</h4>
+<ul>
+<li>The folder name placed on the desktop for files, inside which the following folders are stored</li>
+</ul>
+<h4>
+<a id="user-content-input" class="anchor" href="#input" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Input</h4>
+<ul>
+<li>The input database files to be compared</li>
+</ul>
+<h4>
+<a id="user-content-check" class="anchor" href="#check" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check</h4>
+<ul>
+<li>Where the Excel sheets for intermediary match cases are saved i.e., Perfect, Uncertain, and Missing Data matches</li>
+</ul>
+<h4>
+<a id="user-content-final" class="anchor" href="#final" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Final</h4>
+<ul>
+<li>Where the final exports are saved to</li>
+</ul>
+<h4>
+<a id="user-content-primary-data" class="anchor" href="#primary-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Primary Data</h4>
+<ul>
+<li>Primary database file name to search for in input folder (extension not required)</li>
+</ul>
+<h4>
+<a id="user-content-defaults-4" class="anchor" href="#defaults-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Defaults</h4>
+<blockquote>
+<ul>
+<li>
+<strong>Folder Name</strong>	: Database Comparison</li>
+<li>
+<strong>Input</strong> 		: input</li>
+<li>
+<strong>Check</strong>		: check</li>
+<li>
+<strong>Final</strong>		: final</li>
+<li>
+<strong>Primary Data</strong>	: primary_database</li>
+</ul>
+</blockquote>
+<h2>
+<a id="user-content-areas" class="anchor" href="#areas" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Areas</h2>
+<p>During the check medical areas matching that happens in step 8 of the <a href="#matching">matching process</a>,
+ the program pulls from a list of alternative names given in the 
+'areas.txt' file in the program root. These can be translations, or 
+alternative versions of column names you would like to search for in the
+ customer database's medical area columns. The program will consider any
+ entries with matching information a perfect match.</p>
+<blockquote>
+<ul>
+<li>
+<strong>WARNING</strong>: Column names and their translations are 
+case-sensitive e.g., if you wish to add Physiotherapie as an alternative
+ in lower and capitalised case, you must add both 'physiotherapy' and 
+'Physiotherapy'</li>
+</ul>
+</blockquote>
+<p><em><strong>The document must be laid out as below</strong></em> <em>(spaces before and after the colon are ignored)</em> <br> <em>i.e., Original Column name, colon (:), list of alternatives separated by a comma.</em></p>
+<h4>
+<a id="user-content-example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h4>
+<blockquote>
+<p><strong>Physiotherapie</strong>	: physical therapy, physiotherapy, Physiotherapy <br>
+<strong>Neurologie</strong> 		: neurology<br>
+<strong>Nuklearmedizin</strong>	: Nuclear medicine, radiology</p>
+</blockquote>
+<div style="page-break-after: always;"></div><h2>
+<a id="user-content-author-information-licence-and-acknowledgements" class="anchor" href="#author-information-licence-and-acknowledgements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Author Information, Licence, and Acknowledgements</h2>
+<blockquote>
+<ul>
+<li>
+<strong>Program Name</strong>: Database Merge &amp; Compare</li>
+<li>
+<strong>Version</strong>: 1.0</li>
+<li>
+<strong>Date</strong>: 18/06/2021</li>
+<li>
+<strong>Author</strong>: George M. Marino</li>
+</ul>
+</blockquote>
+<p>Copyright (C) 2021 George Martin Marino <a href="mailto:g.marino94@live.com">g.marino94@live.com</a></p>
+<p>This file is part of the Database Merge &amp; Compare project.</p>
+<p>The Database Merge &amp; Compare project can not be copied and/or distributed without the express
+permission of George Martin Marino <a href="mailto:g.marino94@live.com">g.marino94@live.com</a>.</p>
+<p>This program has been made through private agreement, with permission
+ to share for the author's portfolio purposes only. Use of this software
+ for commercial or private purposes is expressly forbidden.</p>
+<p>Xslx2csv (v0.7.8) package obtained from Dilshod Temirkhodjaev from 
+their GitHub account under GNU General Public License as published by 
+the Free Software Foundation. License permits use, redistribution, and 
+modification.</p>
+
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+
+  </div>
+  <div>&nbsp;</div>
+  </div><script>
+    function showCanonicalImages() {
+      var images = document.getElementsByTagName('img');
+      if (!images) {
+        return;
+      }
+      for (var index = 0; index < images.length; index++) {
+        var image = images[index];
+        if (image.getAttribute('data-canonical-src') && image.src !== image.getAttribute('data-canonical-src')) {
+          image.src = image.getAttribute('data-canonical-src');
+        }
+      }
+    }
+
+    function scrollToHash() {
+      if (location.hash && !document.querySelector(':target')) {
+        var element = document.getElementById('user-content-' + location.hash.slice(1));
+        if (element) {
+           element.scrollIntoView();
+        }
+      }
+    }
+
+    function autorefreshContent(eventSourceUrl) {
+      var initialTitle = document.title;
+      var contentElement = document.getElementById('grip-content');
+      var source = new EventSource(eventSourceUrl);
+      var isRendering = false;
+
+      source.onmessage = function(ev) {
+        var msg = JSON.parse(ev.data);
+        if (msg.updating) {
+          isRendering = true;
+          document.title = '(Rendering) ' + document.title;
+        } else {
+          isRendering = false;
+          document.title = initialTitle;
+          contentElement.innerHTML = msg.content;
+          showCanonicalImages();
+        }
+      }
+
+      source.onerror = function(e) {
+        if (e.readyState === EventSource.CLOSED && isRendering) {
+          isRendering = false;
+          document.title = initialTitle;
+        }
+      }
+    }
+
+    window.onhashchange = function() {
+      scrollToHash();
+    }
+
+    window.onload = function() {
+      scrollToHash();
+    }
+
+    showCanonicalImages();
+
+    var autorefreshUrl = document.getElementById('preview-page').getAttribute('data-autorefresh-url');
+    if (autorefreshUrl) {
+      autorefreshContent(autorefreshUrl);
+    }
+  </script>
+
+</body></html>

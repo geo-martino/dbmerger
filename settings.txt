@@ -1,0 +1,37 @@
+# WARNING: ALL OPTIONS ARE CASE-SENSITIVE APART FROM PROGRAM OPTIONS
+
+# PROGRAM OPTIONS
+Options:  npei xlcau sqo
+
+# PRIMARY DATABASE (enter as a list separated by commas)
+Pri Names   : Vorname, Nachname
+Pri Phone   : Telefon-Festnetz (beruflich), Telefon-Festnetz (privat), Telefon-Mobil (beruflich), Telefon-Mobil (privat)
+Pri Email	: E-Mail (beruflich), E-Mail
+Pri Fax  	: Faxnummer (beruflich), Faxnummer (privat)
+ID 	 	    : TID
+Interest    : Interesse MAFO
+Greeting 	: Briefanrede
+Title   	: Titel
+
+
+# CUSTOMER DATABASE (enter as a list separated by commas)
+Cus Names	: Vorname, First_Name, FirstName, Nachname, Last_Name, LastName, Person Name
+Cus Phone	: Phone, Telefon, Phone Nummer
+Cus Email	: eMail, Email, EMail, E-Mail
+Cus Fax  	: Fax
+Cus Title	: Titel, Anrede und Titel
+Cus Areas	: Person Fachgebiet 1, Person Fachgebiet 2
+
+# MAILING LIST OPTIONS
+Email Sort	: sekretariat@, info@, mail@, praxis@, kontakt@
+Email Add	: Interesse MAFO, Briefanrede, Anrede, Titel
+Phone Sort	: 01
+Phone Drop	: 030, 033
+Title Drop	: med, Herrn, Frau, Herr, meed
+
+# DIRECTORIES
+Folder Name	: Database Comparison
+Input		: input
+Check		: check
+Final		: final
+Primary Data: primary_database
