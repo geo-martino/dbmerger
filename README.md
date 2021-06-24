@@ -204,7 +204,7 @@ The column names for the primary database must be exact and in order.
 >- **Pri Email**	: E-Mail (beruflich), E-Mail
 >- **Pri Fax**		: Faxnummer (beruflich), Faxnummer (privat)
 > >
->- **TID Col**		: TID
+>- **ID Col**		: TID
 >- **Interest**		: Interesse MAFO
 >- **Greeting**		: Briefanrede
 >- **Title**		: Titel
